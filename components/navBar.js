@@ -1,15 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaDiscord, FaInstagram, FaTiktok } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+//shadcn
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+//icons
+import { FaDiscord, FaInstagram, FaPlusCircle, FaTiktok } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { RiCopperCoinFill } from "react-icons/ri";
 
 //list of socialMedia Contacts
 const contactList = [
   {
     icon: (
       <FaInstagram
-        className="h-[22px] w-[22px] transform transition-transform hover:scale-125"
+        className="h-[20px] w-[20px] transform transition-transform hover:scale-150"
         color="#ffffff"
       />
     ),
@@ -18,7 +21,7 @@ const contactList = [
   {
     icon: (
       <FaTiktok
-        className="h-[22px] w-[22px] transform transition-transform hover:scale-125"
+        className="h-[20px] w-[20px] transform transition-transform hover:scale-150"
         color="#ffffff"
       />
     ),
@@ -27,7 +30,7 @@ const contactList = [
   {
     icon: (
       <FaXTwitter
-        className="h-[22px] w-[22px] transform transition-transform hover:scale-125"
+        className="h-[20px] w-[20px] transform transition-transform hover:scale-150"
         color="#ffffff"
       />
     ),
@@ -36,7 +39,7 @@ const contactList = [
   {
     icon: (
       <FaDiscord
-        className="h-[22px] w-[22px] transform transition-transform hover:scale-125"
+        className="h-[20px] w-[20px] transform transition-transform hover:scale-150"
         color="#ffffff"
       />
     ),
@@ -78,7 +81,22 @@ export function Navigation() {
         </ul>
 
         {/* profile */}
-        <div>
+        <div className="flex items-center gap-4">
+          {/* profile */}
+          <div className="flex items-center gap-1 rounded-md border-l-[1px] border-yellow-400 bg-black">
+            {/* remainingCredits */}
+            <div className="flex items-center gap-1 px-2 py-[6px]">
+              <RiCopperCoinFill
+                className="h-[15px] w-[15px] transform"
+                color="#E3A008"
+              />
+              <p className="text-[10px] text-white">0 Credits</p>
+            </div>
+            {/* addCredits */}
+            <div className="rounded-r-md bg-red-500 bg-gradient-to-br from-yellow-400 to-red-500 px-2 py-[6px] hover:bg-gradient-to-bl ">
+              <FaPlusCircle className="h-[15px] w-[15px] transform transition-transform hover:scale-150" />
+            </div>
+          </div>
           <Avatar className="h-[30px] w-[30px]">
             <AvatarImage src="" />
             <AvatarFallback className="text-md bg-red-500">Ai</AvatarFallback>
