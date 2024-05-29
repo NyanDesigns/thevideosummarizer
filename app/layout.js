@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { Footer } from "../components/Footer";
 import { BG } from "../components/mainBG";
 import { Navigation } from "../components/navBar";
 import "./globals.css";
@@ -14,10 +15,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <BG/>
-        <Navigation />
-          {children}
-        <BG/>
+        <div className="flex min-h-screen">
+          <div className="flex w-screen flex-col">
+            <BG />
+            <Navigation />
+            <div className="flex-grow">{children}</div>
+            <Footer />
+          </div>
+        </div>
       </body>
     </html>
   );
