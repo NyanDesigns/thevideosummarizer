@@ -34,7 +34,7 @@ export function Navigation() {
         >
           {/* logo */}
           <Image
-            className="relative"
+            className="relative lg:mr-4"
             src="/logo.svg"
             alt="Logo"
             width={40}
@@ -42,8 +42,11 @@ export function Navigation() {
             priority
           />
           {/* logoText */}
-          <p className="text-lg italic font-bold text-gray-950 max-sm:hidden">
-            VTS
+          <p className="text-lg italic font-bold text-gray-950 max-sm:hidden lg:hidden">
+            T.V.S.
+          </p>
+          <p className="hidden text-lg font-bold text-gray-950 lg:block">
+            The Video Summarizer
           </p>
         </Link>
 

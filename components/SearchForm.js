@@ -26,14 +26,20 @@ export function SearchForm() {
 
   return (
     <Form {...form}>
+      {/* FormWarper */}
       <form className="flex flex-col items-end w-full gap-2 p-6 rounded h-fit bg-background">
+        
+        {/* InputLabel */}
         <div className="w-full">
           Upload Video{" "}
           <span className="text-[12px] text-slate-400">
             File. [MP4. (max 480px)]
           </span>
         </div>
+
+        {/* Inputs */}
         <div className="flex items-end w-full gap-2">
+          {/* FileInput */}
           <div className="grow">
             <FormField
               control={form.control}
@@ -54,19 +60,19 @@ export function SearchForm() {
             />
           </div>
 
-          {/* settingsContent */}
+          {/* settingsInputsButton */}
           <Popover>
             <PopoverTrigger asChild>
               {/* settingsTriggerButton */}
-
               <Button variant="outline" className="p-0">
                 <div className="flex h-[40px] w-[40px] items-center justify-center">
                   <CiSettings className="h-[25px] w-[25px]" />
                 </div>
               </Button>
             </PopoverTrigger>
+
             {/* settingsMenuContent */}
-            <PopoverContent className="mr-6 w-80">
+            <PopoverContent className="mr-6 w-80 bg-foreground text-background">
               {/* settingsMenuWarper */}
               <div className="flex flex-col gap-4">
                 {/* settingsMenuLabels */}
@@ -77,6 +83,7 @@ export function SearchForm() {
                   </p>
                 </div>
 
+                {/* settingsInputs */}
                 <div>
                   <FormField
                     control={form.control}
@@ -91,6 +98,7 @@ export function SearchForm() {
                             min={1}
                             max={60}
                             {...field}
+                            className="text-foreground"
                           />
                         </FormItem>
                       );
@@ -100,6 +108,8 @@ export function SearchForm() {
               </div>
             </PopoverContent>
           </Popover>
+
+          {/* ClearInputs */}
           <Button variant="outline" className="h-[40px] w-[40px] p-0">
             <div className="flex h-[40px] w-[40px] items-center justify-center">
               <MdClear className="h-[25px] w-[25px] text-red-500" />
@@ -107,9 +117,11 @@ export function SearchForm() {
           </Button>
         </div>
 
+        {/* ProcessButton */}
         <Button variant="main" className="w-full mt-2">
           Process Video
         </Button>
+
       </form>
     </Form>
   );
