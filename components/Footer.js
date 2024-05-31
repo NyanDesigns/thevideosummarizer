@@ -9,31 +9,31 @@ import { RiMailSendFill } from "react-icons/ri";
 const contactList = [
   {
     icon: (
-      <RiMailSendFill className="h-[20px] w-[20px] transform text-white transition-transform hover:scale-150 hover:text-red-500" />
+      <RiMailSendFill className="h-[20px] w-[20px] transform text-background transition-transform hover:scale-150 hover:text-red-500" />
     ),
     href: "https://www.gmail.com",
   },
   {
     icon: (
-      <FaInstagram className="h-[20px] w-[20px] transform text-white transition-transform hover:scale-150 hover:text-red-500" />
+      <FaInstagram className="h-[20px] w-[20px] transform text-background transition-transform hover:scale-150 hover:text-red-500" />
     ),
     href: "https://www.instagram.com",
   },
   {
     icon: (
-      <FaTiktok className="h-[20px] w-[20px] transform text-white transition-transform hover:scale-150 hover:text-red-500" />
+      <FaTiktok className="h-[20px] w-[20px] transform text-background transition-transform hover:scale-150 hover:text-red-500" />
     ),
     href: "https://www.tiktok.com",
   },
   {
     icon: (
-      <FaXTwitter className="h-[20px] w-[20px] transform text-white transition-transform hover:scale-150 hover:text-red-500" />
+      <FaXTwitter className="h-[20px] w-[20px] transform text-background transition-transform hover:scale-150 hover:text-red-500" />
     ),
     href: "https://www.twitter.com",
   },
   {
     icon: (
-      <FaDiscord className="h-[20px] w-[20px] transform text-white transition-transform hover:scale-150 hover:text-red-500" />
+      <FaDiscord className="h-[20px] w-[20px] transform text-background transition-transform hover:scale-150 hover:text-red-500" />
     ),
     href: "https://www.discord.com",
   },
@@ -44,7 +44,7 @@ export function Footer() {
     //footer
     <footer className="flex flex-col min-w-screen">
       {/* contactsBanner */}
-      <div className="flex items-center justify-between w-full gap-10 px-6 py-4 bg-gray-950">
+      <div className="flex items-center justify-between w-full gap-10 px-6 py-[12px] bg-gray-950">
         <p className="text-sm text-slate-400">Connect with us //</p>
         {/* socialLogos */}
         <ul className="flex flex-row items-center justify-between grow">

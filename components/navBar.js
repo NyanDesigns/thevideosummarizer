@@ -26,9 +26,9 @@ export function Navigation() {
     //navBar
     <nav className="fixed z-50 min-w-full px-6 top-4">
       {/* navContainer */}
-      <div className="z-50 flex items-center justify-between rounded-md border-[1px] border-gray-950 bg-slate-100 px-3 py-2">
+      <div className="z-50 flex items-center justify-between rounded-md border-[1px] border-gray-950 bg-background px-3 py-2">
         {/* logoContainer */}
-        <Link 
+        <Link
           href={"/"}
           className="flex flex-row items-center justify-center gap-2"
         >
@@ -42,7 +42,9 @@ export function Navigation() {
             priority
           />
           {/* logoText */}
-          <p className="text-lg italic font-bold text-gray-950">VTS</p>
+          <p className="text-lg italic font-bold text-gray-950 max-sm:hidden">
+            VTS
+          </p>
         </Link>
 
         {/* Buttons */}
@@ -51,11 +53,11 @@ export function Navigation() {
             return (
               <li key={index}>
                 <Link
-                  className=" hover:bg- hover:b flex items-center gap-1 rounded-lg border-[2px] border-red-500 px-2 py-1 text-center text-[14px] font-medium text-gray-950 hover:bg-red-500 hover:text-white"
+                  className="flex items-center gap-1 rounded-lg border border-red-500 px-2 py-1 text-center text-[14px] font-medium text-gray-950 hover:bg-red-500 hover:text-white"
                   href={nav.href}
                 >
                   {nav.icon}
-                  {nav.title}
+                  <div className="max-sm:hidden">{nav.title}</div>
                 </Link>
               </li>
             );
@@ -65,19 +67,21 @@ export function Navigation() {
         {/* profile */}
         <div className="flex items-center gap-4">
           {/* creditsMenu */}
-          <div className="flex items-center gap-1 border-yellow-400 rounded-md bg-gray-950">
+          <div className="flex items-center gap-1 border-yellow-400 rounded-md bg-foreground">
             {/* remainingCredits */}
             <div className="flex items-center gap-1 px-2 py-[6px]">
               <RiCopperCoinFill
                 className="h-[15px] w-[15px] transform"
                 color="#E3A008"
               />
-              <p className="text-[10px] text-white">Free Credits</p>
+              <p className="text-[10px] text-background max-sm:hidden">
+                Free Credits
+              </p>
             </div>
             {/* addCredits */}
             <Link
               href={"/credits"}
-              className="rounded-r-md text-gray-950 bg-red-500 bg-gradient-to-br from-yellow-400 to-red-500 px-2 py-[6px] hover:bg-gradient-to-bl "
+              className="rounded-r-md bg-red-500 bg-gradient-to-br from-yellow-400 to-red-500 px-2 py-[6px] text-gray-950 hover:bg-gradient-to-bl "
             >
               <FaPlusCircle className="h-[15px] w-[15px] transform transition-transform hover:scale-125" />
             </Link>
@@ -86,7 +90,9 @@ export function Navigation() {
           {/* profilePic / Menu */}
           <Avatar className="h-[35px] w-[35px]">
             <AvatarImage src="" />
-            <AvatarFallback className="bg-red-500 text-md text-gray-950">Ai</AvatarFallback>
+            <AvatarFallback className="bg-red-500 text-md text-gray-950">
+              Ai
+            </AvatarFallback>
           </Avatar>
         </div>
       </div>

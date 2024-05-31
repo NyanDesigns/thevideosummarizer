@@ -1,11 +1,18 @@
 "use client";
 
 //shadcn
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
-
+//icons
+import { CiSettings } from "react-icons/ci";
+import { MdClear } from "react-icons/md";
 
 export function SearchForm() {
   //set Default Values
@@ -14,51 +21,95 @@ export function SearchForm() {
     defaultValues: {
       address: "",
       categories: "",
-      minPrice: "",
-      maxPrice: "",
     },
   });
 
   return (
     <Form {...form}>
-      <form className="grid items-end w-full gap-6 p-6 rounded bg-background sm:grid-cols-2 lg:grid-cols-4">
-        <FormField
-          control={form.control}
-          name="url"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Upload Video File</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    placeholder="MP4. (max 480px)"
-                    {...field}
+      <form className="flex flex-col items-end w-full gap-2 p-6 rounded h-fit bg-background">
+        <div className="w-full">
+          Upload Video{" "}
+          <span className="text-[12px] text-slate-400">
+            File. [MP4. (max 480px)]
+          </span>
+        </div>
+        <div className="flex items-end w-full gap-2">
+          <div className="grow">
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => {
+                return (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Input
+                        type="file"
+                        {...field}
+                        className="border border-foreground hover:bg-foreground hover:text-background"
+                      />
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
+            />
+          </div>
+
+          {/* settingsContent */}
+          <Popover>
+            <PopoverTrigger asChild>
+              {/* settingsTriggerButton */}
+
+              <Button variant="outline" className="p-0">
+                <div className="flex h-[40px] w-[40px] items-center justify-center">
+                  <CiSettings className="h-[25px] w-[25px]" />
+                </div>
+              </Button>
+            </PopoverTrigger>
+            {/* settingsMenuContent */}
+            <PopoverContent className="mr-6 w-80">
+              {/* settingsMenuWarper */}
+              <div className="flex flex-col gap-4">
+                {/* settingsMenuLabels */}
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">Video Settings</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Set the parameters for video processing.
+                  </p>
+                </div>
+
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="categories"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="flex flex-row items-center w-full gap-2">
+                          <FormLabel>Frame Interval</FormLabel>
+                          <Input
+                            type="number"
+                            placeholder="Interval in Second(s)"
+                            min={1}
+                            max={60}
+                            {...field}
+                          />
+                        </FormItem>
+                      );
+                    }}
                   />
-                </FormControl>
-              </FormItem>
-            );
-          }}
-        />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+          <Button variant="outline" className="h-[40px] w-[40px] p-0">
+            <div className="flex h-[40px] w-[40px] items-center justify-center">
+              <MdClear className="h-[25px] w-[25px] text-red-500" />
+            </div>
+          </Button>
+        </div>
 
-        <FormField
-          control={form.control}
-          name="categories"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Frame Interval</FormLabel>
-                <Input
-                  type="number"
-                  placeholder="Interval in Seconds"
-                  {...field}
-                />
-              </FormItem>
-            );
-          }}
-        />
-
-        <Button className="col-start-[1] col-end-[-1]">Search</Button>
+        <Button variant="main" className="w-full mt-2">
+          Process Video
+        </Button>
       </form>
     </Form>
   );
