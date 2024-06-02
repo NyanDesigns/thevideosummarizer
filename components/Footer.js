@@ -44,7 +44,7 @@ export function Footer() {
     //footer
     <footer className="flex flex-col min-w-screen">
       {/* contactsBanner */}
-      <div className="flex items-center justify-between w-full gap-10 px-6 py-[12px] bg-gray-950">
+      <div className="flex w-full items-center justify-between gap-10 bg-gray-950 px-6 py-[12px]">
         <p className="text-sm text-slate-400">Connect with us //</p>
         {/* socialLogos */}
         <ul className="flex flex-row items-center justify-between grow">
@@ -69,6 +69,7 @@ export function Footer() {
             alt="Logo"
             width={30}
             height={20}
+            style={{ width: "auto", height: "auto" }} //Fix CSS error
             priority
           />
         </Link>

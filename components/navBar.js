@@ -39,6 +39,7 @@ export function Navigation() {
             alt="Logo"
             width={40}
             height={35}
+            style={{ width: "auto", height: "auto" }} //Fix CSS error
             priority
           />
           {/* logoText */}

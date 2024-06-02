@@ -7,9 +7,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useForm } from "react-hook-form";
-import { Button } from "./ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { Input } from "../ui/input";
 //icons
 import { CiSettings } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
