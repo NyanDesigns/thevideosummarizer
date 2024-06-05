@@ -1,8 +1,11 @@
 "use client";
 //react
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+//ffmpgeg.wasmLib
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { toBlobURL } from "@ffmpeg/util";
 //jotaiLib
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 //shadcn
 import {
   Popover,
@@ -18,44 +21,60 @@ import { CiSettings } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 //customComponents
 import { VideoPreviewComponent } from "../../lib/VideoPreview";
+import transcode from "../../lib/ffmpegTranscode";
 //customAtoms
-import { titleHiddenAtom, videoAtom } from "../../lib/atom";
+import {
+  ffmpegLoadedAtom,
+  titleHiddenAtom,
+  videoAtom,
+  videoFileURL,
+} from "../../lib/atom";
 
 export function VideoBlock() {
   //set Default Values
   const form = useForm({
-    defaultValues: {
-      address: "",
-      categories: "",
-    },
+    defaultValues: {},
   });
   //useState
   const [isSummaryVisible, setSummaryVisible] = useState(false);
   const [isSummaryExiting, setSummaryExiting] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  //useRef
+  const ffmpegRef = useRef(new FFmpeg());
+  const messageRef = useRef(null);
   //useAtom
   const [video, setVideo] = useAtom(videoAtom);
+  const [videoURL, setVideoURL] = useAtom(videoFileURL);
+  //useSetAtom
+  const setffmpegLoadedAtom = useSetAtom(ffmpegLoadedAtom);
   //useAtomValue
   const hidden = useAtomValue(titleHiddenAtom);
 
-  //useEffect
-  //Effect //video
-  useEffect(() => {
-    if (!video) {
-      setSummaryVisible(false);
-      return;
-    }
-    if (!hidden) {
-      setTimeout(() => setSummaryVisible(true), 200);
-    } else {
-      setSummaryVisible(true);
-    }
-  }, [video, hidden]);
-
   //FUCTIONS
-  //F //ClearFileInput
+  //F //load ffmpegCores from Web
+  const load = async () => {
+    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+    const ffmpeg = ffmpegRef.current;
+    ffmpeg.on("log", ({ message }) => {
+      if (messageRef.current) messageRef.current.innerHTML = message;
+      console.log(message);
+    });
+    // toBlobURL is used to bypass CORS issue, urls with the same
+    // domain can be used directly.
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.wasm`,
+        "application/wasm",
+      ),
+    });
+    setffmpegLoadedAtom(true);
+  };
+  //F //Clear File Input
   const handleClearInputs = () => {
     setSummaryVisible(false);
     setSummaryExiting(true); // Trigger exit animation
+    setVideoURL(null);
     setTimeout(() => {
       const fileInput = document.getElementById("file_input");
       if (fileInput) {
@@ -65,6 +84,35 @@ export function VideoBlock() {
       setSummaryExiting(false);
     }, 300);
   };
+
+  //useEffect
+  //Effect //video
+  useEffect(() => {
+    if (!video) {
+      setSummaryVisible(false);
+      return;
+    }
+    if (!hidden) {
+      setTimeout(() => {
+        setSummaryVisible(true)
+      }, 200);
+    } else {
+      setSummaryVisible(true);
+    }
+    setVideoURL(null);
+  }, [video, hidden]);
+  //Effect //loadffmpegCores
+  useEffect(() => {
+    load();
+  }, []);
+  //Effect //refreshOutput
+  useEffect(() => {
+    return () => {
+      if (videoURL) {
+        URL.revokeObjectURL(videoURL);
+      }
+    };
+  }, [videoURL]);
 
   //RenderFrontEnd
   return (
@@ -115,7 +163,11 @@ export function VideoBlock() {
             <Popover>
               {/* settingsTriggerButton */}
               <PopoverTrigger asChild>
-                <Button variant="outline" className="p-0" disabled={!video}>
+                <Button
+                  variant="outline"
+                  className="p-0"
+                  disabled={!video || processing}
+                >
                   <div className="flex h-[40px] w-[40px] items-center justify-center">
                     <CiSettings className="h-[25px] w-[25px]" />
                   </div>
@@ -169,7 +221,7 @@ export function VideoBlock() {
                 e.preventDefault(); // Add this line
                 handleClearInputs();
               }}
-              disabled={!video}
+              disabled={!video || processing}
             >
               <div className="flex h-[40px] w-[40px] items-center justify-center">
                 <MdClear className="h-[25px] w-[25px] text-red-500" />
@@ -178,8 +230,22 @@ export function VideoBlock() {
           </div>
 
           {/* ProcessButton */}
-          <Button variant="main" className="w-full mt-2">
-            Process Video
+          <Button
+            variant="main"
+            className="w-full mt-2"
+            onClick={() =>
+              transcode(
+                ffmpegRef,
+                video,
+                setProcessing,
+                setVideoURL,
+                videoURL,
+                messageRef,
+              )
+            }
+            disabled={processing}
+          >
+            {processing ? "Processing..." : "Process Video"}
           </Button>
         </form>
       </Form>
@@ -194,11 +260,23 @@ export function VideoBlock() {
         }`}
       >
         {/* VideoBlock */}
-        <div className="min-w-[360px] max-w-[360px] rounded-md bg-background p-4">
+        <div className="flex h-fit min-w-[360px] max-w-[360px] flex-col rounded-md bg-background p-4">
           <VideoPreviewComponent video={video} />
+          <p
+            className={`${processing ? "w-max-[360px] mt-2 text-wrap text-left" : "hidden"}`}
+            ref={messageRef}
+          ></p>
         </div>
         {/* AiBlock */}
-        <div className="rounded-md grow bg-foreground"></div>
+        <div className="p-4 rounded-md grow bg-foreground">
+          {videoURL ? (
+            <>
+              <img src={videoURL} alt="" width="360" />
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </div>
   );
