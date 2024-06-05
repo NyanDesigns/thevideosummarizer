@@ -115,7 +115,7 @@ export function VideoBlock() {
             <Popover>
               {/* settingsTriggerButton */}
               <PopoverTrigger asChild>
-                <Button variant="outline" className="p-0">
+                <Button variant="outline" className="p-0" disabled={!video}>
                   <div className="flex h-[40px] w-[40px] items-center justify-center">
                     <CiSettings className="h-[25px] w-[25px]" />
                   </div>
@@ -169,6 +169,7 @@ export function VideoBlock() {
                 e.preventDefault(); // Add this line
                 handleClearInputs();
               }}
+              disabled={!video}
             >
               <div className="flex h-[40px] w-[40px] items-center justify-center">
                 <MdClear className="h-[25px] w-[25px] text-red-500" />
@@ -193,7 +194,7 @@ export function VideoBlock() {
         }`}
       >
         {/* VideoBlock */}
-        <div className="max-w-[360px] min-w-[360px] rounded-md bg-background p-4">
+        <div className="min-w-[360px] max-w-[360px] rounded-md bg-background p-4">
           <VideoPreviewComponent video={video} />
         </div>
         {/* AiBlock */}
