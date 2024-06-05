@@ -22,7 +22,7 @@ export function TitleBlock() {
       setTitleExiting(true);
       setTimeout(() => {
         setHidden(true);
-      }, 500);
+      }, 300);
     }
   }, [video]);
 

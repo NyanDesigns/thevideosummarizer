@@ -45,7 +45,7 @@ export function VideoBlock() {
       return;
     }
     if (!hidden) {
-      setTimeout(() => setSummaryVisible(true), 500);
+      setTimeout(() => setSummaryVisible(true), 200);
     } else {
       setSummaryVisible(true);
     }
@@ -63,7 +63,7 @@ export function VideoBlock() {
       }
       setVideo(null);
       setSummaryExiting(false);
-    }, 500);
+    }, 300);
   };
 
   //RenderFrontEnd
