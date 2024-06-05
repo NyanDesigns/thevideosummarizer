@@ -10,9 +10,9 @@ export function Hero() {
   return (
     //heroSection
     <NoSSRWrapper>
-      <div className="flex flex-col max-w-4xl px-6 mt-24 mb-10 h-fit sm:mt-28">
+      <div className="mb-10 mt-24 flex h-fit w-full flex-col px-6 sm:mt-28 sm:max-w-[1000px]">
         {/* hearoWarper */}
-        <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
           {/* titleBlock */}
           <TitleBlock />
           {/* FormBlock */}

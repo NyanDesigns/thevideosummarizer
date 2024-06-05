@@ -1,7 +1,8 @@
 "use client";
-
+//react
+import { useEffect, useState } from "react";
 //jotaiLib
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 //shadcn
 import {
   Popover,
@@ -18,7 +19,7 @@ import { MdClear } from "react-icons/md";
 //customComponents
 import { VideoPreviewComponent } from "../../lib/VideoPreview";
 //customAtoms
-import { videoAtom } from "../../lib/atom";
+import { titleHiddenAtom, videoAtom } from "../../lib/atom";
 
 export function VideoBlock() {
   //set Default Values
@@ -28,19 +29,41 @@ export function VideoBlock() {
       categories: "",
     },
   });
+  //useState
+  const [isSummaryVisible, setSummaryVisible] = useState(false);
+  const [isSummaryExiting, setSummaryExiting] = useState(false);
   //useAtom
   const [video, setVideo] = useAtom(videoAtom);
+  //useAtomValue
+  const hidden = useAtomValue(titleHiddenAtom);
+
+  //useEffect
+  //Effect //video
+  useEffect(() => {
+    if (!video) {
+      setSummaryVisible(false);
+      return;
+    }
+    if (!hidden) {
+      setTimeout(() => setSummaryVisible(true), 500);
+    } else {
+      setSummaryVisible(true);
+    }
+  }, [video, hidden]);
 
   //FUCTIONS
   //F //ClearFileInput
   const handleClearInputs = () => {
-    // Clear the file input value
-    const fileInput = document.getElementById("file_input");
-    if (fileInput) {
-      fileInput.value = "";
-    }
-    // Reset the video state to null
-    setVideo(null);
+    setSummaryVisible(false);
+    setSummaryExiting(true); // Trigger exit animation
+    setTimeout(() => {
+      const fileInput = document.getElementById("file_input");
+      if (fileInput) {
+        fileInput.value = "";
+      }
+      setVideo(null);
+      setSummaryExiting(false);
+    }, 500);
   };
 
   //RenderFrontEnd
@@ -48,8 +71,10 @@ export function VideoBlock() {
     <div className="flex flex-col gap-4 sm:gap-6">
       {/* InputFormBlock */}
       <Form {...form}>
-        <form   onSubmit={(e) => e.preventDefault()}
-        className="flex flex-col items-end w-full gap-2 p-6 rounded-md h-fit bg-background">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="flex flex-col items-end w-full gap-2 p-6 rounded-md h-fit bg-background"
+        >
           {/* InputLabel */}
           <div className="w-full">
             Upload Video{" "}
@@ -158,9 +183,17 @@ export function VideoBlock() {
         </form>
       </Form>
       {/* SummaryBlock */}
-      <div className="flex flex-col w-full gap-4 sm:flex-row">
+      <div
+        className={`-z-10 flex w-full flex-col gap-4 sm:flex-row ${
+          isSummaryVisible
+            ? "animate-slide-in"
+            : isSummaryExiting
+              ? "animate-slide-out"
+              : "hidden"
+        }`}
+      >
         {/* VideoBlock */}
-        <div className="min-h-[200px] max-w-[360px] rounded-md bg-background p-4">
+        <div className="max-w-[360px] min-w-[360px] rounded-md bg-background p-4">
           <VideoPreviewComponent video={video} />
         </div>
         {/* AiBlock */}
