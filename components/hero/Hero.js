@@ -1,13 +1,13 @@
 "use client";
 
-import NoSSRWrapper from "../../lib/NoSSRWrapper";
-
 //icons
 import { FaPowerOff } from "react-icons/fa";
-//components
-import { SearchForm } from "../hero/SearchForm";
+//customComponents
+import NoSSRWrapper from "../../lib/NoSSRWrapper";
+import { VideoBlock } from "./VideoBlock";
 
 export function Hero() {
+  //RenderFrontEnd
   return (
     //heroSection
     <NoSSRWrapper>
@@ -39,7 +39,7 @@ export function Hero() {
             fraction of the time.
           </p>
           {/* FormBlock */}
-          <SearchForm />
+          <VideoBlock />
         </div>
       </div>
     </NoSSRWrapper>

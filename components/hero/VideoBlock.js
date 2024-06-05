@@ -14,21 +14,19 @@ import { Input } from "../ui/input";
 import { CiSettings } from "react-icons/ci";
 import { MdClear } from "react-icons/md";
 
-export function SearchForm() {
+export function VideoBlock() {
   //set Default Values
-  // Define default values directly
   const form = useForm({
     defaultValues: {
       address: "",
       categories: "",
     },
   });
-
+  //RenderFrontEnd
   return (
     <Form {...form}>
       {/* FormWarper */}
       <form className="flex flex-col items-end w-full gap-2 p-6 rounded h-fit bg-background">
-        
         {/* InputLabel */}
         <div className="w-full">
           Upload Video{" "}
@@ -121,7 +119,6 @@ export function SearchForm() {
         <Button variant="main" className="w-full mt-2">
           Process Video
         </Button>
-
       </form>
     </Form>
   );
