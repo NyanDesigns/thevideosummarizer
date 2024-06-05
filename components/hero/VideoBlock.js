@@ -287,9 +287,16 @@ export function VideoBlock() {
             </TabsList>
             <TabsContent value="frames">
               {videoURL ? (
-                <>
-                  <img src={videoURL} alt="" width="360" />
-                </>
+                <div className="grid grid-cols-4 gap-4">
+                  {videoURL.map((videoURL, index) => (
+                    <img
+                      key={index}
+                      src={videoURL}
+                      alt={`Frame ${index}`}
+                      className="w-full h-auto"
+                    />
+                  ))}
+                </div>
               ) : (
                 <></>
               )}
