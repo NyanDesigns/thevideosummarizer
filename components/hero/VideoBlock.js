@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
@@ -121,7 +122,7 @@ export function VideoBlock() {
       <Form {...form}>
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="flex flex-col items-end w-full gap-2 p-6 rounded-md h-fit bg-background"
+          className="z-10 flex flex-col items-end w-full gap-2 p-6 rounded-md h-fit bg-background"
         >
           {/* InputLabel */}
           <div className="w-full">
@@ -251,7 +252,7 @@ export function VideoBlock() {
       </Form>
       {/* SummaryBlock */}
       <div
-        className={`-z-10 flex w-full flex-col gap-4 sm:flex-row ${
+        className={`flex w-full flex-col gap-4 sm:flex-row ${
           isSummaryVisible
             ? "animate-slide-in"
             : isSummaryExiting
@@ -260,22 +261,55 @@ export function VideoBlock() {
         }`}
       >
         {/* VideoBlock */}
-        <div className="flex h-fit min-w-[360px] max-w-[360px] flex-col rounded-md bg-background p-4">
+        <div className=" flex h-fit max-w-[360px] flex-col rounded-md bg-background p-4 sm:min-w-[360px]">
           <VideoPreviewComponent video={video} />
           <p
             className={`${processing ? "w-max-[360px] mt-2 text-wrap text-left" : "hidden"}`}
             ref={messageRef}
           ></p>
         </div>
-        {/* AiBlock */}
-        <div className="p-4 rounded-md grow bg-foreground">
-          {videoURL ? (
-            <>
-              <img src={videoURL} alt="" width="360" />
-            </>
-          ) : (
-            <></>
-          )}
+        {/* FunctionBlock */}
+        <div className="w-full p-4 rounded-md bg-foreground sm:grow">
+          <Tabs defaultValue="frames" className="w-full h-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="frames" className="hover:text-red-500">
+                Frames
+              </TabsTrigger>
+              <TabsTrigger value="transcribe" className="hover:text-red-500">
+                Transcribe
+              </TabsTrigger>
+              <TabsTrigger value="summarize" className="hover:text-red-500">
+                Summarize
+              </TabsTrigger>
+              <TabsTrigger value="chat" className="hover:text-red-500">
+                Chat
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="frames">
+              {videoURL ? (
+                <>
+                  <img src={videoURL} alt="" width="360" />
+                </>
+              ) : (
+                <></>
+              )}
+            </TabsContent>
+            <TabsContent value="transcribe">
+              <div className="flex flex-col items-center justify-center text-center h-60 text-background">
+                COMING SOON..
+              </div>
+            </TabsContent>
+            <TabsContent value="summarize">
+              <div className="flex flex-col items-center justify-center text-center h-60 text-background">
+                COMING SOON..
+              </div>
+            </TabsContent>
+            <TabsContent value="chat">
+              <div className="flex flex-col items-center justify-center text-center h-60 text-background">
+                COMING SOON..
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
