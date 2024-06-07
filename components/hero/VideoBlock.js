@@ -75,7 +75,9 @@ export function VideoBlock() {
   const handleClearInputs = () => {
     setSummaryVisible(false);
     setSummaryExiting(true); // Trigger exit animation
-    setVideoURL(null);
+    // Clear the video frames and other states immediately
+    setVideoURL([null]);
+    console.log("Video URL after clearing:", videoURL); // Debug log
     setTimeout(() => {
       const fileInput = document.getElementById("file_input");
       if (fileInput) {
@@ -233,7 +235,7 @@ export function VideoBlock() {
           {/* ProcessButton */}
           <Button
             variant="main"
-            className="w-full mt-2"
+            className={` mt-2 w-full ${videoURL ? "border-2 border-red-500 bg-background" : ""}`}
             onClick={() =>
               transcode(
                 ffmpegRef,
@@ -273,7 +275,7 @@ export function VideoBlock() {
           <Tabs defaultValue="frames" className="w-full h-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="frames" className="hover:text-red-500">
-                Frames
+                Scenes
               </TabsTrigger>
               <TabsTrigger value="transcribe" className="hover:text-red-500">
                 Transcribe
@@ -287,13 +289,13 @@ export function VideoBlock() {
             </TabsList>
             <TabsContent value="frames">
               {videoURL ? (
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   {videoURL.map((videoURL, index) => (
                     <img
                       key={index}
                       src={videoURL}
                       alt={`Frame ${index}`}
-                      className="w-full h-auto"
+                      className="w-full h-auto rounded-sm"
                     />
                   ))}
                 </div>
