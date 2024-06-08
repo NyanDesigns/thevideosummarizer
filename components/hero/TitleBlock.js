@@ -5,7 +5,7 @@ import { useAtom, useAtomValue } from "jotai";
 //icons
 import { FaPowerOff } from "react-icons/fa";
 //customAtoms
-import { titleHiddenAtom, videoAtom } from "../../lib/atom";
+import { fileInputType, titleHiddenAtom } from "../../lib/atom";
 
 export function TitleBlock() {
   //useState
@@ -13,18 +13,18 @@ export function TitleBlock() {
   //useAtom
   const [hidden, setHidden] = useAtom(titleHiddenAtom);
   //useAtomValue
-  const video = useAtomValue(videoAtom);
+  const inputType = useAtomValue(fileInputType);
 
   //useEffect
   //Effect //video
   useEffect(() => {
-    if (video) {
+    if (inputType) {
       setTitleExiting(true);
       setTimeout(() => {
-        setHidden(true);
+      setHidden(true);
       }, 300);
     }
-  }, [video]);
+  }, [inputType]);
 
   return (
     <div
