@@ -10,7 +10,7 @@ export function Hero() {
   return (
     //heroSection
     <NoSSRWrapper>
-      <div className="mb-10 mt-24 flex h-fit w-full flex-col px-6 sm:mt-28 sm:max-w-[1000px]">
+      <div className="mb-10 mt-24 flex h-full w-full flex-col px-6 sm:mt-28 sm:max-w-[1000px]">
         {/* hearoWarper */}
         <div className="flex flex-col gap-4 sm:gap-6">
           {/* titleBlock */}

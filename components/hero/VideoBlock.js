@@ -6,12 +6,21 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
 //jotaiLib
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+//ytdlLib
 //shadcn
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
@@ -26,9 +35,11 @@ import transcode from "../../lib/ffmpegTranscode";
 //customAtoms
 import {
   ffmpegLoadedAtom,
+  frameInterval,
   titleHiddenAtom,
   videoAtom,
   videoFileURL,
+  ytURL,
 } from "../../lib/atom";
 
 export function VideoBlock() {
@@ -40,12 +51,16 @@ export function VideoBlock() {
   const [isSummaryVisible, setSummaryVisible] = useState(false);
   const [isSummaryExiting, setSummaryExiting] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [inputType, setInputType] = useState("");
+  const [thumbnailURL, setThumbnailURL] = useState("");
   //useRef
   const ffmpegRef = useRef(new FFmpeg());
   const messageRef = useRef(null);
   //useAtom
   const [video, setVideo] = useAtom(videoAtom);
   const [videoURL, setVideoURL] = useAtom(videoFileURL);
+  const [ytLink, setytLink] = useAtom(ytURL);
+  const [interval, setInterval] = useAtom(frameInterval);
   //useSetAtom
   const setffmpegLoadedAtom = useSetAtom(ffmpegLoadedAtom);
   //useAtomValue
@@ -75,35 +90,46 @@ export function VideoBlock() {
   const handleClearInputs = () => {
     setSummaryVisible(false);
     setSummaryExiting(true); // Trigger exit animation
-    // Clear the video frames and other states immediately
+    // Clear the Outputs
     setVideoURL([null]);
-    console.log("Video URL after clearing:", videoURL); // Debug log
+    //console.log("Video URL after clearing:", videoURL); // Debug log
     setTimeout(() => {
       const fileInput = document.getElementById("file_input");
+      const ytURLInput = document.getElementById("youtube_url_input");
       if (fileInput) {
         fileInput.value = "";
       }
+      if (ytURLInput) {
+        ytURLInput.value = "";
+      }
+      //Clear Inputs
       setVideo(null);
+      setytLink("");
       setSummaryExiting(false);
     }, 300);
   };
+  // F //Check is Youtube Link is Valid
+  const isValidYouTubeUrl = (url) => {
+    const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+    return regex.test(url);
+  };
 
   //useEffect
-  //Effect //video
+  //Effect //video and ytLink
   useEffect(() => {
-    if (!video) {
+    if (!video && (!ytLink || !isValidYouTubeUrl(ytLink))) {
       setSummaryVisible(false);
       return;
     }
     if (!hidden) {
       setTimeout(() => {
-        setSummaryVisible(true)
+        setSummaryVisible(true);
       }, 200);
     } else {
       setSummaryVisible(true);
     }
     setVideoURL(null);
-  }, [video, hidden]);
+  }, [video, ytLink, hidden]);
   //Effect //loadffmpegCores
   useEffect(() => {
     load();
@@ -126,40 +152,114 @@ export function VideoBlock() {
           onSubmit={(e) => e.preventDefault()}
           className="z-10 flex flex-col items-end w-full gap-2 p-6 rounded-md h-fit bg-background"
         >
-          {/* InputLabel */}
-          <div className="w-full">
-            Upload Video{" "}
-            <span className="text-[12px] text-slate-400">
-              File. [MP4. (max 480px)]
-            </span>
+          {/* Dynamic Text */}
+          <div className="flex w-full">
+            {inputType === "" ? (
+              <>
+                {/* InputLabel */}
+                <div className="w-full font-bold">
+                  Select Type of Video Input
+                </div>
+              </>
+            ) : inputType === "Youtube" ? (
+              <>
+                {/* InputLabel */}
+                <div className="w-full">
+                  Enter YouTube Video Link
+                  <span className="ml-2 text-[12px] text-slate-400">
+                    [Max 360px Output]
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* InputLabel */}
+                <div className="w-full">
+                  Upload Local Video File
+                  <span className="ml-2 text-[12px] text-slate-400">
+                    [MP4. (Max 360px Output)]
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Inputs */}
           <div className="flex items-end w-full gap-2">
-            {/* FileInput */}
+            {/* FileInputType */}
+            <Select
+              value={inputType}
+              onValueChange={(value) => setInputType(value)}
+            >
+              <SelectTrigger
+                className={`border border-foreground hover:bg-foreground hover:text-background ${
+                  inputType ? "w-[150px]" : "w-full"
+                }`}
+              >
+                <SelectValue placeholder="Youtube || Upload" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem className="text-slate-400" value="Youtube">
+                    Youtube
+                  </SelectItem>
+                  <SelectItem className="text-slate-400" value="Upload">
+                    Upload
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            {/* VideoInput */}
             <div className="grow">
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ field }) => {
-                  return (
-                    <FormItem className="w-full">
-                      <FormControl>
-                        <Input
-                          id="file_input"
-                          type="file"
-                          accept="video/*"
-                          {...field}
-                          onChange={(e) =>
-                            setVideo(e.target.files?.[0] || null)
-                          }
-                          className="border border-foreground hover:bg-foreground hover:text-background"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  );
-                }}
-              />
+              {/* YoutubeURLInput */}
+              {inputType === "Youtube" && (
+                <FormField
+                  control={form.control}
+                  name="youtubeUrl"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input
+                            id="youtube_url_input"
+                            type="text"
+                            placeholder="https://youtu.be/dQw4w9WgXcQ?si=6_xxI-w-8yM4UoXP"
+                            {...field}
+                            className="border border-foreground hover:bg-foreground hover:text-background"
+                            onChange={(e) => setytLink(e.target.value)}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
+              {/* FileInput */}
+              {inputType === "Upload" && (
+                <FormField
+                  control={form.control}
+                  name="url"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input
+                            id="file_input"
+                            type="file"
+                            accept="video/*"
+                            {...field}
+                            onChange={(e) =>
+                              setVideo(e.target.files?.[0] || null)
+                            }
+                            className="border border-foreground hover:bg-foreground hover:text-background"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
             </div>
 
             {/* settingsInputsButton */}
@@ -169,7 +269,7 @@ export function VideoBlock() {
                 <Button
                   variant="outline"
                   className="p-0"
-                  disabled={!video || processing}
+                  disabled={(!ytLink && !video) || processing}
                 >
                   <div className="flex h-[40px] w-[40px] items-center justify-center">
                     <CiSettings className="h-[25px] w-[25px]" />
@@ -204,6 +304,10 @@ export function VideoBlock() {
                               min={1}
                               max={60}
                               {...field}
+                              value={interval}
+                              onChange={(e) =>
+                                setInterval(parseInt(e.target.value))
+                              }
                               className="text-foreground"
                             />
                           </FormItem>
@@ -224,7 +328,7 @@ export function VideoBlock() {
                 e.preventDefault(); // Add this line
                 handleClearInputs();
               }}
-              disabled={!video || processing}
+              disabled={(!ytLink && !video) || processing}
             >
               <div className="flex h-[40px] w-[40px] items-center justify-center">
                 <MdClear className="h-[25px] w-[25px] text-red-500" />
@@ -244,6 +348,7 @@ export function VideoBlock() {
                 setVideoURL,
                 videoURL,
                 messageRef,
+                interval,
               )
             }
             disabled={processing}
@@ -289,15 +394,17 @@ export function VideoBlock() {
             </TabsList>
             <TabsContent value="frames">
               {videoURL ? (
-                <div className="grid grid-cols-3 gap-4">
-                  {videoURL.map((videoURL, index) => (
-                    <img
-                      key={index}
-                      src={videoURL}
-                      alt={`Frame ${index}`}
-                      className="w-full h-auto rounded-sm"
-                    />
-                  ))}
+                <div className="pr-2 overflow-y-scroll h-fit">
+                  <div className="grid max-h-[150px] grid-cols-3 gap-4 sm:max-h-[300px]">
+                    {videoURL.map((videoURL, index) => (
+                      <img
+                        key={index}
+                        src={videoURL}
+                        alt={`Frame ${index}`}
+                        className="w-full h-auto rounded-sm"
+                      />
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <></>
