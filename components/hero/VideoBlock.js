@@ -29,7 +29,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 //icons
 import { CiSettings } from "react-icons/ci";
-import { MdClear } from "react-icons/md";
+import { FaArrowDownWideShort } from "react-icons/fa6";
+import { MdClear, MdPermMedia, MdSubtitles } from "react-icons/md";
+import { PiChatsFill } from "react-icons/pi";
 //customComponents
 import { VideoPreviewComponent } from "../../lib/VideoPreview";
 import { YouTubeThumbnailComponent } from "../../lib/YTThumbnail";
@@ -151,7 +153,7 @@ export function VideoBlock() {
       if (isValidYouTubeUrl(ytLink)) {
         try {
           const response = await fetch(
-            `/api/youtube?url=${encodeURIComponent(ytLink)}`,
+            `/api/youtubethumbnail?url=${encodeURIComponent(ytLink)}`,
           );
           const data = await response.json();
           setThumbnailUrl(data.thumbnailUrl);
@@ -166,7 +168,7 @@ export function VideoBlock() {
 
     fetchThumbnailUrl();
   }, [ytLink]);
-  //Effect //Fetch the thumbnail URL
+  //Effect //Clear Inputs on Input Change
   useEffect(() => {
     setFileInputType(inputType);
     setVideo();
@@ -194,9 +196,9 @@ export function VideoBlock() {
             ) : inputType === "Youtube" ? (
               <>
                 {/* InputLabel */}
-                <div className="w-full">
+                <div className="flex flex-col w-full sm:items-end sm:justify-start sm:flex-row">
                   Enter YouTube Video Link
-                  <span className="ml-2 text-[12px] text-slate-400">
+                  <span className="sm:ml-2 text-[12px] text-slate-400">
                     [Max 360px Output]
                   </span>
                 </div>
@@ -204,9 +206,9 @@ export function VideoBlock() {
             ) : (
               <>
                 {/* InputLabel */}
-                <div className="w-full">
+                <div className="flex flex-col w-full sm:items-end sm:justify-start sm:flex-row">
                   Upload Local Video File
-                  <span className="ml-2 text-[12px] text-slate-400">
+                  <span className="text-[12px] text-slate-400 sm:ml-2">
                     [MP4. (Max 360px Output)]
                   </span>
                 </div>
@@ -467,22 +469,35 @@ export function VideoBlock() {
           <Tabs defaultValue="frames" className="w-full h-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="frames" className="hover:text-red-500">
-                Scenes
+                <div className="flex flex-row items-center gap-2">
+                  <MdPermMedia className="h-[25px] w-[25px] sm:h-[20px] sm:w-[20px]" />
+                  <p className="hidden sm:block">Scenes</p>
+                </div>
               </TabsTrigger>
               <TabsTrigger value="transcribe" className="hover:text-red-500">
-                Transcribe
+                <div className="flex flex-row items-center gap-2">
+                  <MdSubtitles className="h-[25px] w-[25px] sm:h-[20px] sm:w-[20px]" />
+                  <p className="hidden sm:block">Transcribe</p>
+                </div>
               </TabsTrigger>
               <TabsTrigger value="summarize" className="hover:text-red-500">
-                Summarize
+                <div className="flex flex-row items-center gap-2">
+                  <FaArrowDownWideShort className="h-[25px] w-[25px] sm:h-[20px] sm:w-[20px]" />
+                  <p className="hidden sm:block">Summarize</p>
+                </div>
               </TabsTrigger>
               <TabsTrigger value="chat" className="hover:text-red-500">
-                Chat
+                <div className="flex flex-row items-center gap-2">
+                  <PiChatsFill className="h-[25px] w-[25px] sm:h-[20px] sm:w-[20px]" />
+                  <p className="hidden sm:block">Chat</p>
+                </div>
               </TabsTrigger>
             </TabsList>
+            <br />
             <TabsContent value="frames">
               {videoURL ? (
                 <div className="pr-2 overflow-y-scroll h-fit">
-                  <div className="grid max-h-[150px] grid-cols-3 gap-4 sm:max-h-[300px]">
+                  <div className="grid max-h-[150px] grid-cols-2 gap-4 sm:max-h-[300px] sm:grid-cols-3">
                     {videoURL.map((videoURL, index) => (
                       <img
                         key={index}
@@ -498,17 +513,17 @@ export function VideoBlock() {
               )}
             </TabsContent>
             <TabsContent value="transcribe">
-              <div className="flex flex-col items-center justify-center text-center h-60 text-background">
+              <div className="flex h-[150px] flex-col items-center justify-center text-center text-background">
                 COMING SOON..
               </div>
             </TabsContent>
             <TabsContent value="summarize">
-              <div className="flex flex-col items-center justify-center text-center h-60 text-background">
+              <div className="flex h-[150px] flex-col items-center justify-center text-center text-background">
                 COMING SOON..
               </div>
             </TabsContent>
             <TabsContent value="chat">
-              <div className="flex flex-col items-center justify-center text-center h-60 text-background">
+              <div className="flex h-[150px] flex-col items-center justify-center text-center text-background">
                 COMING SOON..
               </div>
             </TabsContent>
